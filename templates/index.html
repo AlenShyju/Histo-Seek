@@ -1,0 +1,1241 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser History Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --darker-bg: #020617;
+            --card-bg: #1e293b;
+            --light-text: #f8fafc;
+            --light-gray: #94a3b8;
+            --dark-text: #0f172a;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --glow: 0 0 15px rgba(99, 102, 241, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Light mode variables */
+        .light-mode {
+            --dark-bg: #f1f5f9;
+            --darker-bg: #e2e8f0;
+            --card-bg: #ffffff;
+            --light-text: #0f172a;
+            --light-gray: #64748b;
+            --dark-text: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--darker-bg), var(--dark-bg));
+            padding: 1.5rem 2rem;
+            box-shadow: var(--glow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        nav a, nav button {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .toggle-dark {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius-sm);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--light-text);
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle-dark:hover {
+            background: var(--primary-color);
+            box-shadow: var(--glow);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .light-mode .card {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .light-mode .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header i {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.2);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .upload-section {
+            text-align: center;
+            padding: 2rem;
+            border: 2px dashed rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+        }
+
+        .upload-section:hover {
+            border-color: var(--primary-color);
+        }
+
+        .upload-section form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .file-input-label {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--glow);
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        #fileInput {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .file-name {
+            color: var(--light-gray);
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+        }
+
+        .file-name.selected {
+            color: var(--secondary-color);
+        }
+
+        .upload-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--secondary-color), #059669);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .status-message {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loading {
+            color: var(--primary-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .error {
+            color: var(--danger-color);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius-sm);
+            color: var(--light-text);
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .light-mode .input-field {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--glow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--warning-color), #f97316);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .keyword-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .keyword {
+            background: rgba(239, 68, 68, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .keyword button {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .scan-result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius-sm);
+            border-left: 4px solid var(--primary-color);
+            display: none;
+        }
+
+        .light-mode .scan-result {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .scan-result p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .scan-result p strong {
+            min-width: 120px;
+            color: var(--light-gray);
+        }
+
+        .download-link {
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            align-self: flex-start;
+            box-shadow: var(--glow);
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .light-mode table {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--light-text);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .suspicious {
+            color: var(--danger-color);
+            font-weight: 500;
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .chart-container {
+            padding: 1rem;
+            grid-column: 1 / -1;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--darker-bg), var(--dark-bg));
+            padding: 1.5rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Layout adjustments for session and download history */
+        .session-card {
+            grid-column: 1 / -1;
+        }
+
+        .downloads-card {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            table {
+                font-size: 0.875rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Histo-Seek</span>
+            </div>
+            <nav>
+                <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+                <a href="guide.html"><i class="fas fa-book"></i> Guide</a>
+                <a href="team.html"><i class="fas fa-envelope"></i>Contact</a>
+                <button class="toggle-dark" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                    <span class="dark-text">Dark</span>
+                    <span class="light-text" style="display:none;">Light</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-database"></i>
+                <h2>Upload History</h2>
+            </div>
+            <div class="upload-section">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="file-input-wrapper">
+                        <label for="fileInput" class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Choose Browser History File
+                        </label>
+                        <input type="file" name="history_db" id="fileInput" accept=".sqlite">
+                    </div>
+                    <div id="fileName" class="file-name">No file selected</div>
+                    <button type="submit" class="upload-btn">
+                        <i class="fas fa-play"></i>
+                        Analyze History
+                    </button>
+                    <div id="loading" class="status-message loading" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Analyzing your browsing history...
+                    </div>
+                    <div id="success" class="status-message success" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        Analysis complete!
+                    </div>
+                    <div id="error" class="status-message error" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-search"></i>
+                <h2>URL Scanner</h2>
+            </div>
+            <div class="input-group">
+                <input type="text" id="scanUrl" name="scan_url" class="input-field" placeholder="Enter URL to scan (e.g., https://example.com)">
+                <button type="submit" class="btn" id="scanBtn">
+                    <i class="fas fa-shield-virus"></i>
+                    Scan
+                </button>
+            </div>
+            <div id="scanResult" class="scan-result" style="display: none;"></div>
+            <a href="/download_scan" id="downloadScanLink" class="download-link" style="display: none;">
+                <i class="fas fa-file-download"></i>
+                Download Scan Report
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Threat Detection</h2>
+            </div>
+            <form method="POST" class="input-group">
+                <input type="text" name="new_keyword" class="input-field" placeholder="Add suspicious keyword/phrase">
+                <button type="submit" name="add_keyword" class="btn-secondary">
+                    <i class="fas fa-plus"></i>
+                    Add
+                </button>
+            </form>
+            <div class="keyword-list">
+                {% for keyword in suspicious_keywords %}
+                    <div class="keyword">
+                        {{ keyword }}
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="keyword_to_remove" value="{{ keyword }}">
+                            <button type="submit" name="remove_keyword">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if history_data %}
+            <div class="card" style="grid-column: 1 / -1;">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    <h2>Browsing History Analysis</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Title</th>
+                                <th>Visits</th>
+                                <th>Last Visit</th>
+                                <th>Threat</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in history_data %}
+                            <tr {% if entry.suspicious %}class="alert"{% endif %}>
+                                <td {% if entry.suspicious %}class="suspicious"{% endif %}>{{ entry.url|truncate(50) }}</td>
+                                <td>{{ entry.title|truncate(30) }}</td>
+                                <td>{{ entry.visit_count }}</td>
+                                <td>{{ entry.last_visit_time }}</td>
+                                <td>
+                                    {% if entry.suspicious %}
+                                        <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i> Yes
+                                    {% else %}
+                                        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> No
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if entry.geolocation.country %}
+                                        <i class="fas fa-globe"></i> {{ entry.geolocation.country }}
+                                        {% if entry.geolocation.city %}, {{ entry.geolocation.city }}{% endif %}
+                                    {% else %}
+                                        Unknown
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <!-- {% if entry.status == 200 %}
+                                        <span style="color: var(--secondary-color);">deleted</span>
+                                    {% else %}
+                                        <span style="color: var(--warning-color);">Active</span>
+                                    {% endif %} -->
+
+                                    {% if entry.status == 'active' %}
+            <span style="color: var(--secondary-color);">Active</span>
+        {% elif entry.status == 'deleted' %}
+            <span style="color: var(--danger-color);">Deleted</span>
+        {% elif entry.status.startswith('incognito') %}
+            <span style="color: var(--warning-color);">Incognito (Cache)</span>
+        {% else %}
+            <span>{{ entry.status }}</span>
+        {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="/download" class="download-link">
+                    <i class="fas fa-file-csv"></i>
+                    Export as CSV
+                </a>
+            </div>
+
+            <div class="card session-card">
+                <div class="card-header">
+                    <i class="fas fa-project-diagram"></i>
+                    <h2>Session Data</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Referrer</th>
+                                <th>Visit Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in session_data %}
+                            <tr>
+                                <td>{{ entry.url|truncate(60) }}</td>
+                                <td>{{ entry.referrer|truncate(60) }}</td>
+                                <td>{{ entry.visit_time }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if downloads %}
+            <div class="card downloads-card">
+                <div class="card-header">
+                    <i class="fas fa-download"></i>
+                    <h2>Download History</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Download Time</th>
+                                <th>Size</th>
+                                <th>Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in downloads %}
+                            <tr>
+                                <td>{{ entry.file_path.split('/')[-1]|truncate(40) }}</td>
+                                <td>{{ entry.download_time }}</td>
+                                <td>{{ (entry.size_bytes/1024/1024)|round(2) }} MB</td>
+                                <td>{{ entry.referrer|truncate(40) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card chart-container">
+                <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Browsing Activity Timeline</h2>
+                </div>
+                <canvas id="historyChart"></canvas>
+            </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 <strong>Histo-Seek</strong> | Advanced Browser History Analysis</p>
+            <div class="footer-links">
+                <a href="privacy.html"><i class="fas fa-lock"></i> Privacy</a>
+                <a href="terms.html"><i class="fas fa-file-contract"></i> Terms</a>
+                <a href="https://alshytech.vercel.app/"><i class="fas fa-headset"></i> Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const darkText = document.querySelector('.dark-text');
+            const lightText = document.querySelector('.light-text');
+            
+            body.classList.toggle('light-mode');
+            const isLightMode = body.classList.contains('light-mode');
+            
+            localStorage.setItem('lightMode', isLightMode);
+            darkText.style.display = isLightMode ? 'inline' : 'none';
+            lightText.style.display = isLightMode ? 'none' : 'inline';
+        }
+
+        // Initialize dark/light mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLightMode = localStorage.getItem('lightMode') === 'true';
+            const body = document.body;
+            const darkText = document.querySelector('.dark-text');
+            const lightText = document.querySelector('.light-text');
+            
+            if (isLightMode) {
+                body.classList.add('light-mode');
+                darkText.style.display = 'inline';
+                lightText.style.display = 'none';
+            } else {
+                body.classList.remove('light-mode');
+                darkText.style.display = 'none';
+                lightText.style.display = 'inline';
+            }
+        });
+
+        // File Upload Feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileName');
+            const uploadForm = document.getElementById('uploadForm');
+            const loading = document.getElementById('loading');
+            const success = document.getElementById('success');
+            const error = document.getElementById('error');
+
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files[0]) {
+                    fileNameDisplay.textContent = e.target.files[0].name;
+                    fileNameDisplay.classList.add('selected');
+                } else {
+                    fileNameDisplay.textContent = 'No file selected';
+                    fileNameDisplay.classList.remove('selected');
+                }
+            });
+
+            uploadForm.addEventListener('submit', function(e) {
+                if (!fileInput.files[0]) {
+                    e.preventDefault();
+                    error.textContent = 'Please select a file first';
+                    error.style.display = 'flex';
+                    setTimeout(() => error.style.display = 'none', 3000);
+                    return;
+                }
+                
+                loading.style.display = 'flex';
+                success.style.display = 'none';
+                error.style.display = 'none';
+            });
+
+            // Simulate analysis completion (remove in production)
+            setTimeout(() => {
+                if ({{ history_data|length|default(0) }} > 0) {
+                    loading.style.display = 'none';
+                    success.style.display = 'flex';
+                }
+            }, 2000);
+        });
+
+        // URL Scanning
+        document.getElementById('scanBtn').addEventListener('click', async function() {
+            const url = document.getElementById('scanUrl').value.trim();
+            const resultDiv = document.getElementById('scanResult');
+            const downloadLink = document.getElementById('downloadScanLink');
+            
+            if (!url) {
+                resultDiv.innerHTML = '<p style="color: var(--danger-color);"><i class="fas fa-exclamation-circle"></i> Please enter a URL to scan</p>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            resultDiv.style.display = 'none';
+            downloadLink.style.display = 'none';
+            resultDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Scanning URL for threats...</p>';
+            resultDiv.style.display = 'block';
+
+            try {
+                const response = await fetch('/scan_url', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `scan_url=${encodeURIComponent(url)}`
+                });
+                
+                const data = await response.json();
+
+                if (data.error) {
+                    resultDiv.innerHTML = `<p style="color: var(--danger-color);"><i class="fas fa-exclamation-circle"></i> Error: ${data.error}</p>`;
+                } else {
+                    const vt = data.virustotal || {};
+                    const malicious = vt.malicious || 0;
+                    const suspicious = vt.suspicious || 0;
+                    
+                    let threatLevel = 'Low';
+                    let threatColor = 'var(--secondary-color)';
+                    
+                    if (malicious > 3 || suspicious > 5) {
+                        threatLevel = 'High';
+                        threatColor = 'var(--danger-color)';
+                    } else if (malicious > 0 || suspicious > 2) {
+                        threatLevel = 'Medium';
+                        threatColor = 'var(--warning-color)';
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <p><strong><i class="fas fa-link"></i> URL:</strong> ${data.url}</p>
+                        <p><strong><i class="fas fa-shield-alt"></i> Threat Level:</strong> 
+                            <span style="color: ${threatColor}; font-weight: 600;">${threatLevel}</span>
+                        </p>
+                        <p><strong><i class="fas fa-virus"></i> VirusTotal:</strong> 
+                            <span style="color: var(--danger-color);">${malicious} Malicious</span>, 
+                            <span style="color: var(--warning-color);">${suspicious} Suspicious</span>, 
+                            ${vt.harmless || 0} Harmless
+                        </p>
+                        <p><strong><i class="fas fa-calendar-check"></i> Last Analysis:</strong> ${vt.last_analysis_date || 'Not available'}</p>
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Geolocation:</strong> 
+                            ${data.geolocation.country || 'Unknown'}, ${data.geolocation.city || 'Unknown'} 
+                            (${data.geolocation.lat ? data.geolocation.lat + ', ' + data.geolocation.lon : 'No coordinates'})
+                        </p>
+                    `;
+                    downloadLink.style.display = 'inline-flex';
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color: var(--danger-color);"><i class="fas fa-exclamation-circle"></i> Network error: ${err.message}</p>`;
+            }
+        });
+
+        // History Chart only now name of site
+        // 
+        
+//         
+// {% if history_data %}
+// document.addEventListener('DOMContentLoaded', function() {
+//     const ctx = document.getElementById('historyChart').getContext('2d');
+    
+//     // Process data for chart
+//     const visitData = [{% for entry in history_data %}{{ entry.visit_count }},{% endfor %}];
+//     const suspiciousData = [{% for entry in history_data %}{% if entry.suspicious %}{{ entry.visit_count }}{% else %}0{% endif %},{% endfor %}];
+//     const labels = [{% for entry in history_data %}'{{ entry.last_visit_time }}',{% endfor %}];
+    
+//     // Simplify labels for better readability
+//     const simplifiedLabels = labels.map(label => {
+//         const date = new Date(label);
+//         return isNaN(date.getTime()) ? label : date.toLocaleDateString();
+//     });
+    
+//     new Chart(ctx, {
+//         type: 'line',
+//         data: {
+//             labels: simplifiedLabels,
+//             datasets: [
+//                 {
+//                     label: 'Total Visits',
+//                     data: visitData,
+//                     borderColor: 'rgba(99, 102, 241, 1)',
+//                     backgroundColor: 'rgba(99, 102, 241, 0.1)',
+//                     fill: true,
+//                     tension: 0.1,
+//                     borderWidth: 2,
+//                     pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+//                     pointBorderColor: '#fff',
+//                     pointRadius: 4,
+//                     pointHoverRadius: 6,
+//                     pointBorderWidth: 1
+//                 },
+//                 {
+//                     label: 'Suspicious Visits',
+//                     data: suspiciousData,
+//                     borderColor: 'rgba(239, 68, 68, 1)',
+//                     backgroundColor: 'rgba(239, 68, 68, 0.1)',
+//                     fill: true,
+//                     tension: 0.1,
+//                     borderWidth: 2,
+//                     pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+//                     pointBorderColor: '#fff',
+//                     pointRadius: 4,
+//                     pointHoverRadius: 6,
+//                     pointBorderWidth: 1
+//                 }
+//             ]
+//         },
+//         options: {
+//             responsive: true,
+//             maintainAspectRatio: false,
+//             scales: {
+//                 x: {
+//                     grid: {
+//                         color: 'rgba(255, 255, 255, 0.1)',
+//                         display: true
+//                     },
+//                     ticks: {
+//                         color: 'var(--light-text)',
+//                         font: {
+//                             size: 11
+//                         },
+//                         maxRotation: 45,
+//                         minRotation: 45
+//                     }
+//                 },
+//                 y: {
+//                     beginAtZero: true,
+//                     grid: {
+//                         color: 'rgba(255, 255, 255, 0.1)',
+//                         display: true
+//                     },
+//                     ticks: {
+//                         color: 'var(--light-text)',
+//                         font: {
+//                             size: 11
+//                         },
+//                         precision: 0
+//                     }
+//                 }
+//             },
+//             plugins: {
+//                 legend: {
+//                     display: true,
+//                     position: 'top',
+//                     labels: {
+//                         color: 'var(--light-text)',
+//                         font: {
+//                             size: 12,
+//                             weight: 'bold'
+//                         },
+//                         padding: 20,
+//                         usePointStyle: true,
+//                         pointStyle: 'circle'
+//                     }
+//                 },
+//                 tooltip: {
+//                     enabled: true,
+//                     mode: 'index',
+//                     intersect: false,
+//                     backgroundColor: 'var(--card-bg)',
+//                     titleColor: 'var(--light-text)',
+//                     bodyColor: 'var(--light-text)',
+//                     borderColor: 'rgba(255, 255, 255, 0.2)',
+//                     borderWidth: 1,
+//                     padding: 10,
+//                     caretPadding: 10,
+//                     cornerRadius: 6
+//                 }
+//             },
+//             interaction: {
+//                 mode: 'nearest',
+//                 axis: 'x',
+//                 intersect: false
+//             },
+//             elements: {
+//                 line: {
+//                     tension: 0.1
+//                 },
+//                 point: {
+//                     radius: 4,
+//                     hoverRadius: 6,
+//                     hoverBorderWidth: 2
+//                 }
+//             }
+//         }
+//     });
+// });
+// {% endif %}
+
+            // History Chart with Site Names
+{% if history_data %}
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('historyChart').getContext('2d');
+    
+    // Prepare data with site names and visit counts
+    const historyEntries = [
+        {% for entry in history_data %}
+        {
+            url: "{{ entry.url|truncate(30) }}",
+            title: "{{ entry.title|default('No title')|truncate(30) }}",
+            visits: {{ entry.visit_count }},
+            suspicious: {{ entry.suspicious|lower }},
+            lastVisit: "{{ entry.last_visit_time }}"
+        },
+        {% endfor %}
+    ];
+
+    // Sort by visit count (descending)
+    historyEntries.sort((a, b) => b.visits - a.visits);
+    
+    // Get top 20 most visited sites for better readability
+    const topSites = historyEntries.slice(0, 20);
+    
+    // Prepare chart data
+    const labels = topSites.map(entry => entry.url);
+    const visitData = topSites.map(entry => entry.visits);
+    const suspiciousData = topSites.map(entry => entry.suspicious ? entry.visits : 0);
+    const backgroundColors = topSites.map(entry => 
+        entry.suspicious ? 'rgba(239, 68, 68, 0.7)' : 'rgba(99, 102, 241, 0.7)'
+    );
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Visits',
+                data: visitData,
+                backgroundColor: backgroundColors,
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y', // Horizontal bars
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'var(--light-text)',
+                        precision: 0
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'var(--light-text)',
+                        font: {
+                            size: 11
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const data = topSites[context.dataIndex];
+                            return [
+                                `Title: ${data.title}`,
+                                `Visits: ${data.visits}`,
+                                `Last Visit: ${data.lastVisit}`,
+                                `Status: ${data.suspicious ? 'Suspicious' : 'Normal'}`
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Create a table for detailed view
+    const tableContainer = document.createElement('div');
+    tableContainer.innerHTML = `
+        <div style="margin-top: 20px; overflow-x: auto;">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Title</th>
+                        <th>Visits</th>
+                        <th>Last Visit</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${historyEntries.map(entry => `
+                        <tr style="${entry.suspicious ? 'background-color: rgba(239, 68, 68, 0.1);' : ''}">
+                            <td>${entry.url}</td>
+                            <td>${entry.title}</td>
+                            <td>${entry.visits}</td>
+                            <td>${entry.lastVisit}</td>
+                            <td>${entry.suspicious ? 
+                                '<span style="color: var(--danger-color);">Suspicious</span>' : 
+                                '<span style="color: var(--secondary-color);">Normal</span>'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    // Append table below the chart
+    document.querySelector('.chart-container').appendChild(tableContainer);
+    
+    // Add some basic styling for the table
+    const style = document.createElement('style');
+    style.textContent = `
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: var(--card-bg);
+        }
+        .history-table th, .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .history-table th {
+            background: rgba(99, 102, 241, 0.2);
+        }
+        .history-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    `;
+    document.head.appendChild(style);
+});
+{% endif %}
+
+    </script>
+</body>
+</html>

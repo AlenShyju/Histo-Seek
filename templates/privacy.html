@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Statement | Browser History Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f1f5f9;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .privacy-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .privacy-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .last-updated {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .privacy-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+        
+        .privacy-point {
+            margin-bottom: 1.5rem;
+        }
+        
+        .privacy-point i {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+        
+        .highlight-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            text-decoration: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .privacy-header {
+                padding: 3rem 1rem;
+            }
+            
+            .privacy-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="privacy-header">
+        <div class="container">
+            <h1><i class="fas fa-lock"></i> Privacy Statement</h1>
+            <p>How we protect your data and ensure transparency</p>
+            <div class="last-updated">Last updated: April 23, 2025</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="privacy-section">
+            <h2><i class="fas fa-user-shield"></i> Our Commitment</h2>
+            <p>At Browser History Analyzer, we prioritize your privacy and security above all else. As cybersecurity professionals, we've built this tool with the same privacy standards we demand in our own work.</p>
+            
+            <div class="highlight-box">
+                <p><strong>Core Principle:</strong> Your browsing history never leaves your control unless you explicitly choose to share it with third-party services for threat analysis.</p>
+            </div>
+        </div>
+        
+        <div class="privacy-section">
+            <h2><i class="fas fa-database"></i> Data Handling</h2>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-upload"></i> Data Collection</h3>
+                <p>We only process the specific browser history file you choose to upload (typically Chrome's "History" file or Firefox's "places.sqlite"). The tool does not:</p>
+                <ul>
+                    <li>Access other files on your device</li>
+                    <li>Collect personal identifiers like names or email addresses</li>
+                    <li>Use cookies or tracking technologies</li>
+                    <li>Record your IP address beyond standard server logs</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-cogs"></i> Processing</h3>
+                <p>All analysis occurs in a secure, isolated environment:</p>
+                <ul>
+                    <li><strong>Local processing:</strong> The tool runs entirely in your browser for most operations</li>
+                    <li><strong>Server processing:</strong> When server-side analysis is required, files are encrypted in transit</li>
+                    <li><strong>Automatic deletion:</strong> Uploaded files are permanently deleted immediately after processing completes</li>
+                    <li><strong>Memory-only:</strong> No history data is ever written to persistent storage</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-eraser"></i> Data Retention</h3>
+                <p>We maintain strict data retention policies:</p>
+                <ul>
+                    <li><strong>Session data:</strong> Analysis results are kept temporarily in memory and cleared when you close your browser</li>
+                    <li><strong>Server logs:</strong> Standard web server logs are rotated weekly and contain no history data</li>
+                    <li><strong>Backups:</strong> No backups containing user data are maintained</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="privacy-section">
+            <h2><i class="fas fa-exchange-alt"></i> Third-Party Services</h2>
+            <p>Certain features integrate with external services to enhance functionality:</p>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-virus"></i> VirusTotal API</h3>
+                <p>When you enable suspicious URL detection:</p>
+                <ul>
+                    <li>Domain names (not full URLs) may be sent to VirusTotal for threat intelligence</li>
+                    <li>This is optional and disabled by default</li>
+                    <li>VirusTotal's privacy policy applies to any data shared with them</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-map-marker-alt"></i> IP Geolocation (ip-api.com)</h3>
+                <p>For geolocation features:</p>
+                <ul>
+                    <li>Public IP addresses associated with domains may be queried</li>
+                    <li>Only approximate location (city-level) is retrieved</li>
+                    <li>No personal browsing data is shared with the service</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Important:</strong> We don't control these third-party services. We recommend reviewing their privacy policies before enabling these features.</p>
+            </div>
+        </div>
+        
+        <div class="privacy-section">
+            <h2><i class="fas fa-shield-alt"></i> Security Measures</h2>
+            <p>We implement multiple layers of protection:</p>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-lock"></i> Technical Safeguards</h3>
+                <ul>
+                    <li>HTTPS encryption for all data transfers</li>
+                    <li>Memory isolation between user sessions</li>
+                    <li>Regular security audits of our codebase</li>
+                    <li>Automatic security headers to prevent common web vulnerabilities</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-code"></i> Open Source Transparency</h3>
+                <p>As an open-source tool:</p>
+                <ul>
+                    <li>All code is publicly available for review</li>
+                    <li>Security researchers can audit the implementation</li>
+                    <li>Users can verify there are no hidden data collection mechanisms</li>
+                    <li>Community contributions help strengthen security</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="privacy-section">
+            <h2><i class="fas fa-balance-scale"></i> Legal Compliance</h2>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-gavel"></i> Data Sharing</h3>
+                <p>We do not share, sell, or disclose your data except:</p>
+                <ul>
+                    <li>When required by valid legal process</li>
+                    <li>To protect our rights or safety</li>
+                    <li>When you explicitly opt-in to share data (e.g., submitting a bug report)</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-point">
+                <h3><i class="fas fa-user-check"></i> Your Rights</h3>
+                <p>You maintain control over your data:</p>
+                <ul>
+                    <li>Right to decline processing by closing the tool</li>
+                    <li>Right to verify no data is retained after your session</li>
+                    <li>Right to request deletion of any accidental server logs (via contact form)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="privacy-section">
+            <h2><i class="fas fa-question-circle"></i> Contact & Questions</h2>
+            <p>For privacy-related inquiries or to report concerns:</p>
+            <ul>
+                <li>Email: alenshyju27@gmail.com</li>
+                <li>Security issues: alshygroup@gmail.com</li>
+                <li>GitHub: github.com/alenshyju</li>
+            </ul>
+            
+            <p>We will respond to all legitimate privacy inquiries within 72 hours.</p>
+            
+            <a href="/" class="btn"><i class="fas fa-arrow-left"></i> Back to Analyzer</a>
+            <a href="terms.html" class="btn btn-outline"><i class="fas fa-file-contract"></i> View Terms of Service</a>
+        </div>
+    </div>
+</body>
+</html>

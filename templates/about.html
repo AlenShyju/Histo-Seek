@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Browser History Analyzer | Digital Forensics Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --success: #059669;
+            --info: #0284c7;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f1f5f9;
+            padding: 0;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+            background-size: cover;
+            pointer-events: none;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card i {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .spec-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-top: 3px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .spec-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .spec-card h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #047857;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .badge-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .badge-info {
+            background: var(--info);
+            color: white;
+        }
+        
+        .tab-container {
+            margin-top: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--gray);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feature-highlight {
+            background: rgba(37, 99, 235, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .feature-highlight h4 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .demo-image {
+            width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .demo-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .accordion {
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .accordion-header {
+            background: var(--light);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .accordion-header:hover {
+            background: #e2e8f0;
+        }
+        
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-header.active i {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            background: white;
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .accordion-content.active {
+            padding: 1rem 1.5rem;
+            max-height: 1000px;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-active {
+            background: var(--success);
+        }
+        
+        .status-deleted {
+            background: var(--danger);
+        }
+        
+        .status-incognito {
+            background: var(--warning);
+        }
+        
+        .status-suspicious {
+            background: #7c3aed;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table th {
+            background: var(--light);
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:hover td {
+            background: #f8fafc;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        body.dark-mode {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .section,
+        body.dark-mode .feature-card,
+        body.dark-mode .spec-card,
+        body.dark-mode .accordion-content.active {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .accordion-header {
+            background: #334155;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .accordion-header:hover {
+            background: #475569;
+        }
+        
+        body.dark-mode .comparison-table th {
+            background: #334155;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .comparison-table tr:hover td {
+            background: #334155;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-specs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero animate__animated animate__fadeIn">
+        <div class="container">
+            <h1><i class="fas fa-shield-alt"></i> Browser History Analyzer</h1>
+            <p>Advanced digital forensics tool for cybersecurity professionals and investigators with comprehensive browser history analysis capabilities</p>
+            <div class="btn-group" style="margin-top: 1.5rem;">
+                <a href="#features" class="btn btn-outline"><i class="fas fa-star"></i> Key Features</a>
+                <a href="#demo" class="btn btn-outline"><i class="fas fa-play-circle"></i> How It Works</a>
+                <a href="/" class="btn"><i class="fas fa-arrow-left"></i> Back to Analyzer</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="section animate__animated animate__fadeInUp" id="features">
+            <h2><i class="fas fa-star"></i> Core Features</h2>
+            <p>Browser History Analyzer is a comprehensive forensic tool that provides deep insights into browser activities with advanced analysis capabilities:</p>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="forensic">Forensic Analysis</div>
+                    <div class="tab" data-tab="threat">Threat Detection</div>
+                    <div class="tab" data-tab="geo">Geolocation</div>
+                    <div class="tab" data-tab="behavioral">Behavioral Analytics</div>
+                </div>
+                
+                <div class="tab-content active" id="forensic-tab">
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-search-plus"></i> Deep Forensic Analysis</h4>
+                        <p>Comprehensive examination of browser history with advanced recovery techniques:</p>
+                        <div class="features">
+                            <div class="feature-card">
+                                <i class="fas fa-database"></i>
+                                <h3>Active History Extraction</h3>
+                                <p>Extracts active browsing history from Chrome (urls table) and Firefox (moz_places table) with complete metadata.</p>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-trash-restore"></i>
+                                <h3>Deleted History Recovery</h3>
+                                <p>Recovers deleted history entries using multiple forensic techniques:</p>
+                                <ul>
+                                    <li>Hidden or null-time entries (hidden = 1 or last_visit_time IS NULL)</li>
+                                    <li>Orphaned visits (unlinked records in visits or moz_historyvisits)</li>
+                                    <li>SQLite free page analysis (regex-based URL extraction)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-file-code"></i>
+                                <h3>SQLite Parsing</h3>
+                                <p>Advanced parsing of Chrome's History and Firefox's places.sqlite databases with support for:</p>
+                                <ul>
+                                    <li>Compressed databases</li>
+                                    <li>Corrupted file recovery</li>
+                                    <li>WAL journal analysis</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-download"></i> Download History Analysis</h4>
+                        <p>Complete analysis of file download activities across browsers:</p>
+                        <div class="features">
+                            <div class="feature-card">
+                                <i class="fab fa-chrome"></i>
+                                <h3>Chrome Downloads</h3>
+                                <p>Extracts complete download history (downloads table) including:</p>
+                                <ul>
+                                    <li>File path and name</li>
+                                    <li>Download timestamp</li>
+                                    <li>File size and referrer</li>
+                                    <li>Download status</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fab fa-firefox"></i>
+                                <h3>Firefox Downloads</h3>
+                                <p>Extracts download history via moz_annos including:</p>
+                                <ul>
+                                    <li>File name and referrer</li>
+                                    <li>Download date</li>
+                                    <li>Source URL</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-network-wired"></i> Session Data Analysis</h4>
+                        <p>Reconstructs browsing sessions to understand user navigation patterns:</p>
+                        <ul>
+                            <li>Extracts session data (URL, referrer, visit time) from Chrome (visits table) and Firefox (moz_historyvisits table)</li>
+                            <li>Identifies complete browsing sessions with timestamps</li>
+                            <li>Visualizes navigation paths between sites</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="threat-tab">
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-shield-virus"></i> Advanced Threat Detection</h4>
+                        <p>Comprehensive security scanning to identify potential threats in browsing history:</p>
+                        <div class="features">
+                            <div class="feature-card">
+                                <i class="fas fa-viruses"></i>
+                                <h3>VirusTotal Integration</h3>
+                                <p>Automatically scans URLs against VirusTotal API to detect:</p>
+                                <ul>
+                                    <li>Known malicious domains</li>
+                                    <li>Suspicious activity</li>
+                                    <li>Phishing attempts</li>
+                                    <li>Malware distribution sites</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>Suspicious Keyword Matching</h3>
+                                <p>Flags URLs containing user-defined suspicious keywords such as:</p>
+                                <ul>
+                                    <li>Login pages ("login", "signin")</li>
+                                    <li>Financial sites ("bank", "paypal")</li>
+                                    <li>Security risks ("phishing", "scam")</li>
+                                    <li>Custom keyword lists</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-search"></i>
+                                <h3>Real-time URL Scanning</h3>
+                                <p>Allows manual scanning of specific URLs with detailed threat reports including:</p>
+                                <ul>
+                                    <li>Detection ratio from multiple antivirus engines</li>
+                                    <li>Last analysis date</li>
+                                    <li>Detailed threat categorization</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="geo-tab">
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-map-marked-alt"></i> Geolocation Mapping</h4>
+                        <p>Visualize browsing activity geographically to identify patterns and anomalies:</p>
+                        <div class="features">
+                            <div class="feature-card">
+                                <i class="fas fa-globe"></i>
+                                <h3>IP Geolocation</h3>
+                                <p>Extracts geographical data for URLs including:</p>
+                                <ul>
+                                    <li>Country and city</li>
+                                    <li>Latitude and longitude</li>
+                                    <li>ISP and organization</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-table"></i>
+                                <h3>Text-based Display</h3>
+                                <p>Shows geolocation data directly in the history table:</p>
+                                <ul>
+                                    <li>Country flags for quick visual reference</li>
+                                    <li>City-level precision where available</li>
+                                    <li>Coordinates for mapping integration</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-map"></i>
+                                <h3>Interactive Mapping</h3>
+                                <p>Coming soon: Interactive map visualization showing:</p>
+                                <ul>
+                                    <li>Geographical distribution of browsing</li>
+                                    <li>Heatmap of frequent locations</li>
+                                    <li>Timeline of geographical activity</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="behavioral-tab">
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-chart-line"></i> Behavioral Analytics</h4>
+                        <p>Advanced analysis of user browsing patterns and behaviors:</p>
+                        <div class="features">
+                            <div class="feature-card">
+                                <i class="fas fa-project-diagram"></i>
+                                <h3>Pattern Recognition</h3>
+                                <p>Identifies suspicious patterns in browsing activity:</p>
+                                <ul>
+                                    <li>Unusual browsing times</li>
+                                    <li>Rapid succession of visits</li>
+                                    <li>Clusters of similar domains</li>
+                                    <li>Anomalous session durations</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-chart-bar"></i>
+                                <h3>Time-series Visualization</h3>
+                                <p>Interactive charts showing browsing activity patterns:</p>
+                                <ul>
+                                    <li>Bar chart of top 20 sites by visit count</li>
+                                    <li>Daily/weekly activity trends</li>
+                                    <li>Visit duration analysis</li>
+                                    <li>Custom time range filtering</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <i class="fas fa-user-secret"></i>
+                                <h3>Incognito Detection</h3>
+                                <p>Identifies potential incognito browsing activity:</p>
+                                <ul>
+                                    <li>Gaps in history timeline</li>
+                                    <li>Session resets</li>
+                                    <li>Cache inconsistencies</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate__animated animate__fadeInUp" id="demo">
+            <h2><i class="fas fa-play-circle"></i> How It Works</h2>
+            <p>See the Browser History Analyzer in action with these interactive demonstrations of key features:</p>
+            
+            <div class="accordion">
+                <div class="accordion-header">
+                    <span><i class="fas fa-search"></i> Forensic Analysis Process</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <img src="/static/analyis.png" alt="Forensic Analysis Process" class="demo-image">
+                    <p>The forensic analysis process follows these steps:</p>
+                    <ol>
+                        <li><strong>Database Acquisition:</strong> Secure collection of browser history files</li>
+                        <li><strong>File Verification:</strong> SHA-256 checksum validation</li>
+                        <li><strong>Active Record Extraction:</strong> Parsing standard database tables</li>
+                        <li><strong>Deleted Data Recovery:</strong> Advanced forensic techniques</li>
+                        <li><strong>Threat Analysis:</strong> VirusTotal integration</li>
+                        <li><strong>Report Generation:</strong> Comprehensive forensic documentation</li>
+                    </ol>
+                </div>
+                
+                <div class="accordion-header">
+                    <span><i class="fas fa-virus"></i> Threat Detection Demo</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <img src="/static/Threat.png" alt="Threat Detection Demo" class="demo-image">
+                    <p>The threat detection system provides multiple layers of protection:</p>
+                    <div class="features">
+                        <div class="feature-card">
+                            <h3>Real-time Scanning</h3>
+                            <p>Immediate analysis of URLs against multiple threat databases</p>
+                            <div class="status-indicator">
+                                <span class="status-dot status-active"></span>
+                                <span>Active Protection</span>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <h3>Keyword Alerts</h3>
+                            <p>Customizable keyword lists for sensitive content</p>
+                            <div class="status-indicator">
+                                <span class="status-dot status-suspicious"></span>
+                                <span>Customizable Rules</span>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <h3>Historical Analysis</h3>
+                            <p>Retrospective scanning of entire browsing history</p>
+                            <div class="status-indicator">
+                                <span class="status-dot status-active"></span>
+                                <span>Comprehensive Coverage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-header">
+                    <span><i class="fas fa-file-export"></i> Reporting Features</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <img src="/static/download.png" alt="Reporting Features" class="demo-image">
+                    <p>Generate comprehensive forensic reports with these features:</p>
+                    <div class="feature-list">
+                        <li><strong>CSV Export:</strong> Full history and download data in spreadsheet format</li>
+                        <li><strong>PDF Reports:</strong> Professionally formatted documents with analysis findings</li>
+                        <li><strong>Custom Filters:</strong> Export specific date ranges or threat levels</li>
+                        <li><strong>Evidence Tagging:</strong> Mark important findings for inclusion in reports</li>
+                        <li><strong>Executive Summary:</strong> High-level overview of key findings</li>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate__animated animate__fadeInUp">
+            <h2><i class="fas fa-cogs"></i> Technical Specifications</h2>
+            <p>Browser History Analyzer is built with cutting-edge technologies to ensure reliable forensic analysis:</p>
+            
+            <div class="tech-specs">
+                <div class="spec-card">
+                    <h3><i class="fas fa-database"></i> Data Processing</h3>
+                    <ul>
+                        <li>Advanced SQLite parsing for Chrome/Firefox</li>
+                        <li>Binary plist decoder for Safari</li>
+                        <li>Compressed history file support</li>
+                        <li>Multi-threaded processing</li>
+                        <li>WAL journal analysis</li>
+                        <li>Free page scanning</li>
+                    </ul>
+                </div>
+                
+                <div class="spec-card">
+                    <h3><i class="fas fa-shield-virus"></i> Security Features</h3>
+                    <ul>
+                        <li>Local processing only (no data uploaded)</li>
+                        <li>SHA-256 integrity verification</li>
+                        <li>Read-only mode for evidence preservation</li>
+                        <li>Tamper-evident logging</li>
+                        <li>Secure file handling</li>
+                        <li>Path traversal protection</li>
+                    </ul>
+                </div>
+                
+                <div class="spec-card">
+                    <h3><i class="fas fa-chart-bar"></i> Analytics Capabilities</h3>
+                    <ul>
+                        <li>Time-series analysis</li>
+                        <li>Domain clustering</li>
+                        <li>Behavioral anomaly detection</li>
+                        <li>Custom pattern matching</li>
+                        <li>Geographical mapping</li>
+                        <li>Session reconstruction</li>
+                    </ul>
+                </div>
+                
+                <div class="spec-card">
+                    <h3><i class="fas fa-file-alt"></i> Reporting</h3>
+                    <ul>
+                        <li>PDF/HTML report generation</li>
+                        <li>Customizable templates</li>
+                        <li>Chain of custody documentation</li>
+                        <li>Evidence tagging system</li>
+                        <li>CSV/JSON export</li>
+                        <li>Executive summaries</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="feature-highlight" style="margin-top: 2rem;">
+                <h4><i class="fas fa-laptop-code"></i> System Requirements</h4>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Minimum</th>
+                                <th>Recommended</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Processor</td>
+                                <td>Dual-core 2GHz</td>
+                                <td>Quad-core 3GHz+</td>
+                            </tr>
+                            <tr>
+                                <td>Memory</td>
+                                <td>4GB RAM</td>
+                                <td>8GB+ RAM</td>
+                            </tr>
+                            <tr>
+                                <td>Storage</td>
+                                <td>100MB free space</td>
+                                <td>500MB+ free space</td>
+                            </tr>
+                            <tr>
+                                <td>OS</td>
+                                <td>Windows 10, macOS 10.15, Linux</td>
+                                <td>Windows 11, macOS 12, Linux</td>
+                            </tr>
+                            <tr>
+                                <td>Browser</td>
+                                <td>Chrome 90+, Firefox 85+</td>
+                                <td>Latest version</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate__animated animate__fadeInUp">
+            <h2><i class="fas fa-project-diagram"></i> Project Details</h2>
+            
+            <div class="feature-highlight">
+                <h4><i class="fab fa-github"></i> Open Source Commitment</h4>
+                <p>Browser History Analyzer is released under the MIT License. We believe in transparent forensic tools that can be verified and improved by the community.</p>
+                <p>Key aspects of our open-source approach:</p>
+                <div class="features">
+                    <div class="feature-card">
+                        <i class="fas fa-code"></i>
+                        <h3>Full Transparency</h3>
+                        <p>All source code available for review and audit</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Community Driven</h3>
+                        <p>Features prioritized based on user needs</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Security Focused</h3>
+                        <p>Regular security audits and updates</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-highlight">
+                <h4><i class="fas fa-globe"></i> Supported Browsers</h4>
+                <p>Comprehensive support for major browsers with more being added regularly:</p>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Browser</th>
+                                <th>History</th>
+                                <th>Downloads</th>
+                                <th>Sessions</th>
+                                <th>Deleted Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Google Chrome</td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                            </tr>
+                            <tr>
+                                <td>Mozilla Firefox</td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                            </tr>
+                            <tr>
+                                <td>Microsoft Edge</td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--success);"></i></td>
+                                <td><i class="fas fa-check-circle" style="color: var(--warning);"></i></td>
+                            </tr>
+                            <tr>
+                                <td>Apple Safari</td>
+                                <td><i class="fas fa-check-circle" style="color: var(--warning);"></i></td>
+                                <td><i class="fas fa-times-circle" style="color: var(--danger);"></i></td>
+                                <td><i class="fas fa-times-circle" style="color: var(--danger);"></i></td>
+                                <td><i class="fas fa-times-circle" style="color: var(--danger);"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="feature-highlight">
+                <h4><i class="fas fa-road"></i> Development Roadmap</h4>
+                <p>Planned features and improvements for future releases:</p>
+                <div class="features">
+                    <div class="feature-card">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>Interactive Maps</h3>
+                        <p>Visual geolocation of browsing activity</p>
+                        <span class="badge badge-primary">Q3 2023</span>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-robot"></i>
+                        <h3>AI Analysis</h3>
+                        <p>Machine learning for anomaly detection</p>
+                        <span class="badge badge-info">Q4 2023</span>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Mobile Support</h3>
+                        <p>Android and iOS browser analysis</p>
+                        <span class="badge badge-warning">2024</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                <a href="https://github.com/alenshyju" class="btn btn-outline" target="_blank"><i class="fab fa-github"></i> View on GitHub</a>
+                <a href="team.html" class="btn btn-outline"><i class="fas fa-envelope"></i> Contact Our Team</a>
+                <a href="guide.html" class="btn btn-outline"><i class="fas fa-book"></i> Documentation</a>
+                <a href="/" class="btn"><i class="fas fa-arrow-left"></i> Back to Analyzer</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dark-mode-toggle" id="darkModeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+    
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('active');
+                header.nextElementSibling.classList.toggle('active');
+            });
+        });
+        
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Animation on scroll
+        const animateOnScroll = () => {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (sectionTop < windowHeight - 100) {
+                    section.style.opacity = '1';
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll(); // Run once on page load
+    </script>
+</body>
+</html>
