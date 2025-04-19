@@ -703,10 +703,19 @@ def download():
         logger.error(f"Error in download route: {e}")
         return "Error generating CSV", 500
 
-if __name__ == "__main__":
+# if __name__ == "__main__":      // For local run
+#     try:
+#         if not os.path.exists("uploads"):
+#             os.makedirs("uploads")
+#         app.run(debug=True)
+#     except Exception as e:
+#         logger.error(f"Error starting app: {e}")
+
+if __name__ == "__main__":    // ONLY FOR RENDER SERVICE
     try:
         if not os.path.exists("uploads"):
             os.makedirs("uploads")
-        app.run(debug=True)
+        port = int(os.environ.get("PORT", 5000))
+        app.run(host="0.0.0.0", port=port, debug=True)
     except Exception as e:
         logger.error(f"Error starting app: {e}")
