@@ -91,4 +91,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 Thanks to the open-source community and developers of browser data extraction libraries like `browser-history`, `sqlite`, etc.
 
+🙌 Author
+Alen P Shyju
+📫 https://www.linkedin.com/in/alen-p-shyju-/ | 🌐 https://alenshyju.vercel.app/ | ✉️ alenshyju27@gmail.com
+
 ---
