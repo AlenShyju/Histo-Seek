@@ -711,7 +711,7 @@ def download():
 #     except Exception as e:
 #         logger.error(f"Error starting app: {e}")
 
-if __name__ == "__main__":    // ONLY FOR RENDER SERVICE
+if __name__ == "__main__":    # ONLY FOR RENDER SERVICE
     try:
         if not os.path.exists("uploads"):
             os.makedirs("uploads")
